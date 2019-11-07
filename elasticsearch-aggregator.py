@@ -7,6 +7,7 @@ entries during them.
 """
 
 import argparse
+import json
 import elasticsearch
 import elasticsearch_dsl
 
@@ -20,7 +21,7 @@ def parse_args():
         description='Aggregate Elasticsearch Log data.')
     parser.add_argument(
         '--host',
-        default='https://logging-es.openshift-logging.svc.cluster.local',
+        default='https://logging-es',
         type=str,
         action='store',
         help='Host name or IP of the Elasticsearch server.'
@@ -122,6 +123,8 @@ if __name__ == "__main__":
     except elasticsearch.AuthenticationException as err:
         print(err)
     else:
+        results = {}
         INDICES = get_indices(CLIENT)
         for index in INDICES:
-            bucket_by_minute(CLIENT, index)
+            results[index] = bucket_by_minute(CLIENT, index)
+        print(json.dumps(results, sort_keys=True))

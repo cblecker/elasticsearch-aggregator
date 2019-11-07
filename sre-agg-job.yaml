@@ -15,24 +15,17 @@ spec:
         job-name: sre-es-agg
     spec:
       containers:
-      - image: quay.io/chcollin/sre-es-ag
+      - image: elasticsearch-aggregator:latest
         imagePullPolicy: Always
         name: sre-es-agg
-        resources: {}
-        terminationMessagePath: /dev/termination-log
-        terminationMessagePolicy: File
         volumeMounts:
         - mountPath: /app/secret
           name: logging-elasticsearch
           readOnly: true
       dnsPolicy: ClusterFirst
       restartPolicy: Never
-      schedulerName: default-scheduler
-      securityContext: {}
-      terminationGracePeriodSeconds: 30
       volumes:
       - name: logging-elasticsearch
         secret:
           defaultMode: 420
           secretName: logging-elasticsearch
-
